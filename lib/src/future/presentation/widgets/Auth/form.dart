@@ -24,124 +24,105 @@ class _AuthFormState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
-                  return TextFormField(
-                    key: _emailFieldKey,
-                    enabled: !_isLoading,
-                    controller: _emailController,
-                    readOnly: _isPasswordVisible,
-                    autofocus: !_isPasswordVisible,
-                    onFieldSubmitted: (String email) async {
-                      await _load(_onEmailFieldSubmitted(context));
-                    },
-                    onChanged: (String password) async {
-                      if (state is AuthenticationFailedState) {
-                        context.read<AuthCubit>().forgetLastError();
-                      }
-                    },
-                    autovalidateMode: AutovalidateMode.always,
-                    validator: (String? value) =>
-                        state is AuthenticationFailedState
-                            ? state.errorMessage
-                            : _emailValidator(value),
-                    decoration: InputDecoration(
-                      label: const Text("Email"),
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.mail),
-                      suffixIcon: InkWell(
-                        onTap: () async {
-                          await _onEditEmail(context);
-                        },
-                        child: const Icon(Icons.edit),
-                      ),
-                    ),
-                  );
-                }),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 200),
-                  child: _isPasswordVisible
-                      ? Column(
-                          children: [
-                            const SizedBox(height: 10),
-                            BlocBuilder<AuthCubit, AuthState>(
-                              builder: (context, state) => TextFormField(
-                                enabled: !_isLoading,
-                                controller: _passwordController,
-                                obscureText: _isObscurePasswordEnabled,
-                                autofocus: _isPasswordVisible,
-                                onFieldSubmitted: (String password) async {
-                                  await _load(
-                                      _onPasswordFieldSubmitted(context));
-                                },
-                                onChanged: (String password) async {
-                                  if (state is AuthenticationFailedState) {
-                                    context.read<AuthCubit>().forgetLastError();
-                                  }
-                                },
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (String? value) =>
-                                    state is AuthenticationFailedState
-                                        ? state.errorMessage
-                                        : _passwordValidator(value),
-                                decoration: InputDecoration(
-                                  label: const Text("Password"),
-                                  border: const OutlineInputBorder(),
-                                  prefixIcon: const Icon(Icons.password),
-                                  suffixIcon: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        _isObscurePasswordEnabled =
-                                            !_isObscurePasswordEnabled;
-                                      });
-                                    },
-                                    child: Icon(_isObscurePasswordEnabled
-                                        ? Icons.visibility
-                                        : Icons.visibility_off),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      : const SizedBox(),
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextFormField(
+              key: _emailFieldKey,
+              enabled: !_isLoading,
+              controller: _emailController,
+              readOnly: _isPasswordVisible,
+              autofocus: !_isPasswordVisible,
+              onFieldSubmitted: (String email) async {
+                await _load(_onEmailFieldSubmitted(context));
+              },
+              validator: (String? value) => _emailValidator(value),
+              decoration: InputDecoration(
+                label: const Text("Email"),
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.mail),
+                suffixIcon: InkWell(
+                  onTap: () async {
+                    await _onEditEmail(context);
+                  },
+                  child: const Icon(Icons.edit),
                 ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _isLoading
-                      ? null
-                      : () async {
-                          await _load(_isPasswordVisible
-                              ? _authenticate(context)
-                              : _getTemporaryPassword(context));
-                        },
-                  child: Container(
-                    alignment: Alignment.center,
-                    constraints: const BoxConstraints(minHeight: 50),
-                    child: _isLoading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(),
-                          )
-                        : Text(_isPasswordVisible ? "Sign In" : "Get password"),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 200),
+              child: _isPasswordVisible
+                  ? BlocBuilder<AuthCubit, AuthState>(
+                      builder: (context, state) => Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: TextFormField(
+                          enabled: !_isLoading,
+                          controller: _passwordController,
+                          obscureText: _isObscurePasswordEnabled,
+                          autofocus: _isPasswordVisible,
+                          onFieldSubmitted: (String password) async {
+                            await _load(_onPasswordFieldSubmitted(context));
+                          },
+                          onChanged: (String password) async {
+                            if (state is AuthenticationFailedState) {
+                              context.read<AuthCubit>().forgetLastError();
+                            }
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (String? value) =>
+                              state is AuthenticationFailedState
+                                  ? state.errorMessage
+                                  : _passwordValidator(value),
+                          decoration: InputDecoration(
+                            label: const Text("Password"),
+                            border: const OutlineInputBorder(),
+                            prefixIcon: const Icon(Icons.password),
+                            suffixIcon: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _isObscurePasswordEnabled =
+                                      !_isObscurePasswordEnabled;
+                                });
+                              },
+                              child: Icon(_isObscurePasswordEnabled
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : const SizedBox(),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _isLoading
+                  ? null
+                  : () async {
+                      await _load(_isPasswordVisible
+                          ? _authenticate(context)
+                          : _getTemporaryPassword(context));
+                    },
+              child: Container(
+                alignment: Alignment.center,
+                constraints: const BoxConstraints(minHeight: 50),
+                child: _isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(),
+                      )
+                    : Text(_isPasswordVisible ? "Sign In" : "Get password"),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
