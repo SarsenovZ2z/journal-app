@@ -1,47 +1,54 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:journal/src/future/domain/entities/auth/auth_token_entity.dart';
-import 'package:journal/src/future/presentation/bloc/Auth/auth_cubit.dart';
-import 'package:journal/src/future/presentation/bloc/Auth/auth_states.dart';
 
 class Api {
-  final AuthCubit authCubit;
-  final AuthTokenEntity? authToken;
-  final String _baseUrl =
-      dotenv.get('BACKEND_URL', fallback: 'http://localhost:8000/');
+  late final Dio httpClient;
 
-  final Dio httpClient = Dio();
+  AuthTokenEntity? authToken;
 
-  Api({required this.authCubit, this.authToken}) {
+  Api({this.authToken}) {
+    httpClient = Dio(
+      BaseOptions(
+        baseUrl: dotenv.get(
+          'BACKEND_URL',
+          fallback: 'http://localhost:8000/',
+        ),
+        headers: {
+          'Accept': 'application/json',
+        },
+      ),
+    );
+
     httpClient.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) async {
-        if (!options.path.contains('http')) {
-          options.path = _baseUrl + options.path;
-        }
-        if (_accessToken is String) {
+      onRequest: (options, handler) {
+        if (_accessToken != null) {
           options.headers['Authorization'] = _accessToken;
         }
         return handler.next(options);
       },
-      onError: (error, handler) async {
-        if (_accessToken != null && error.response?.statusCode == 401) {
-          if (_refreshToken is String) {
-            if (await refreshAccessToken()) {
-              return handler.resolve(await _retry(error.requestOptions));
-            }
-          }
+      onError: (error, handler) {
+        // if (_accessToken != null && error.response?.statusCode == 401) {
+        //   if (_refreshToken is String) {
+        //     if (await refreshAccessToken()) {
+        //       return handler.resolve(await _retry(error.requestOptions));
+        //     }
+        //   }
 
-          await _logout();
-        }
+        //   await _logout();
+        // }
         return handler.next(error);
       },
     ));
   }
 
-  Api usingAuthToken(AuthTokenEntity authToken) => Api(
-        authCubit: authCubit,
+  factory Api.usingAuthToken(AuthTokenEntity authToken) => Api(
         authToken: authToken,
       );
+
+  void setAuthToken(AuthTokenEntity? authToken) {
+    this.authToken = authToken;
+  }
 
   Future<bool> refreshAccessToken() async {
     // TODO: implement refresh token
@@ -55,18 +62,15 @@ class Api {
     return false;
   }
 
-  AuthState get _authState {
-    return authCubit.state;
-  }
-
   AuthTokenEntity? get _authToken {
     if (authToken is AuthTokenEntity) {
       return authToken;
     }
-    final currentAuthState = _authState;
-    return currentAuthState is AuthenticatedState
-        ? currentAuthState.authToken
-        : null;
+    return null;
+    // final currentAuthState = _authState;
+    // return currentAuthState is AuthenticatedState
+    //     ? currentAuthState.authToken
+    //     : null;
   }
 
   String? get _accessToken {
@@ -78,7 +82,7 @@ class Api {
   }
 
   Future<void> _logout() async {
-    return authCubit.logout();
+    // return authCubit.logout();
   }
 
   Future<Response<dynamic>> _retry(RequestOptions requestOptions) async {

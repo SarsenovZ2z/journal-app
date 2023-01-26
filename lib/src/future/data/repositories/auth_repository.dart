@@ -1,4 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:journal/src/future/data/datasources/auth/temporary_password_auth/temporary_password_auth_provider.dart';
 import 'package:journal/src/future/domain/entities/auth/auth_token_entity.dart';
 import 'package:journal/src/future/domain/repositories/auth_repository.dart';
 
@@ -7,12 +8,16 @@ class AuthRepositoryImpl extends AuthRepository {
   final String _refreshTokenName = 'refreshToken';
 
   final FlutterSecureStorage secureStorage;
+  final TemporaryPasswordAuthProvider authProvider;
 
-  AuthRepositoryImpl({required this.secureStorage});
+  AuthRepositoryImpl({
+    required this.secureStorage,
+    required this.authProvider,
+  });
 
   @override
   Future<void> getTemporaryPassword(String email) async {
-    // TODO: send request
+    return authProvider.getTemporaryPassword(email);
   }
 
   @override
@@ -20,9 +25,13 @@ class AuthRepositoryImpl extends AuthRepository {
     required String email,
     required String password,
   }) async {
-    const accessToken = AuthTokenEntity(accessToken: 'accessToken');
-    _setAuthToken(accessToken);
-    return accessToken;
+    const authToken = AuthTokenEntity(accessToken: 'accessToken');
+
+    await _storeAuthToken(authToken);
+
+    authProvider.setAuthToken(authToken);
+
+    return authToken;
   }
 
   @override
@@ -30,6 +39,7 @@ class AuthRepositoryImpl extends AuthRepository {
     try {
       // TODO: send logout request
     } catch (_) {}
+    authProvider.setAuthToken(null);
     await _forgetAuthToken();
   }
 
@@ -45,6 +55,8 @@ class AuthRepositoryImpl extends AuthRepository {
       await _forgetAuthToken();
       throw Exception('Invalid auth token');
     }
+
+    authProvider.setAuthToken(authToken);
 
     return authToken;
   }
@@ -80,7 +92,7 @@ class AuthRepositoryImpl extends AuthRepository {
     );
   }
 
-  Future<void> _setAuthToken(AuthTokenEntity authToken) async {
+  Future<void> _storeAuthToken(AuthTokenEntity authToken) async {
     await Future.wait([
       secureStorage.write(
         key: _accessTokenName,

@@ -36,7 +36,12 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> authByCredentials(String email, String password) async {
+  Future<void> getPassword({required String email}) async {
+    return getTemporaryPassword(GetTemporaryPasswordParams(email: email));
+  }
+
+  Future<void> authByCredentials(
+      {required String email, required String password}) async {
     if (state is AuthenticatingState) {
       return;
     }

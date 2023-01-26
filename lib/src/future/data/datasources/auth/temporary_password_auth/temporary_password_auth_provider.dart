@@ -19,5 +19,9 @@ class TemporaryPasswordAuthProviderImpl extends TemporaryPasswordAuthProvider {
   }
 
   @override
-  Future<void> getTemporaryPassword(String email) async {}
+  Future<void> getTemporaryPassword(String email) async {
+    await api.httpClient.get('/v1/auth/signin', queryParameters: {
+      'email': email,
+    });
+  }
 }
