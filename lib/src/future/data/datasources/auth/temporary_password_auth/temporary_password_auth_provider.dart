@@ -15,7 +15,11 @@ class TemporaryPasswordAuthProviderImpl extends TemporaryPasswordAuthProvider {
 
   @override
   Future<AuthTokenModel> authenticate(EmailAuthParams params) async {
-    return const AuthTokenModel(accessToken: 'accessToken');
+    final response = await api.httpClient.post('/v1/auth/signin', data: {
+      'email': params.email,
+      'password': params.password,
+    });
+    return AuthTokenModel.fromJson(response.data);
   }
 
   @override
@@ -24,4 +28,7 @@ class TemporaryPasswordAuthProviderImpl extends TemporaryPasswordAuthProvider {
       'email': email,
     });
   }
+
+  @override
+  Future<void> logout() async {}
 }

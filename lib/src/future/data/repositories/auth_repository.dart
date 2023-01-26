@@ -1,4 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:journal/src/functions.dart';
+import 'package:journal/src/future/data/datasources/auth/auth_provider.dart';
 import 'package:journal/src/future/data/datasources/auth/temporary_password_auth/temporary_password_auth_provider.dart';
 import 'package:journal/src/future/domain/entities/auth/auth_token_entity.dart';
 import 'package:journal/src/future/domain/repositories/auth_repository.dart';
@@ -25,7 +27,12 @@ class AuthRepositoryImpl extends AuthRepository {
     required String email,
     required String password,
   }) async {
-    const authToken = AuthTokenEntity(accessToken: 'accessToken');
+    final AuthTokenEntity authToken = await authProvider.authenticate(
+      EmailAuthParams(
+        email: email,
+        password: password,
+      ),
+    );
 
     await _storeAuthToken(authToken);
 
@@ -62,8 +69,7 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   Future<bool> _checkAuthToken(AuthTokenEntity authToken) async {
-    await Future.delayed(const Duration(seconds: 2));
-    // TODO: use Api().usingAuthToken() method
+    await slowAwait();
     return true;
   }
 
@@ -85,6 +91,7 @@ class AuthRepositoryImpl extends AuthRepository {
     if (accessToken.isEmpty) {
       return null;
     }
+    print(accessToken);
 
     return AuthTokenEntity(
       accessToken: accessToken,

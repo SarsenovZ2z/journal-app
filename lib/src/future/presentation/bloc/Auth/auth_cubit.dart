@@ -24,15 +24,14 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
 
-    emit(AuthenticatingState());
+    emit(AuthenticatingState(isCheckingOldToken: true));
     try {
       final AuthTokenEntity authToken =
           await authenticateByToken(AuthenticateByTokenParams());
 
       emit(AuthenticatedState(authToken: authToken));
-    } catch (_) {
-      emit(AuthenticationFailedState());
-      emit(NotAuthenticatedState());
+    } catch (e) {
+      emit(AuthenticationFailedState(errorMessage: e.toString()));
     }
   }
 
@@ -40,11 +39,15 @@ class AuthCubit extends Cubit<AuthState> {
     return getTemporaryPassword(GetTemporaryPasswordParams(email: email));
   }
 
-  Future<void> authByCredentials(
-      {required String email, required String password}) async {
+  Future<void> authByCredentials({
+    required String email,
+    required String password,
+  }) async {
     if (state is AuthenticatingState) {
       return;
     }
+
+    forgetLastError();
 
     emit(AuthenticatingState());
     try {
@@ -57,8 +60,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       emit(AuthenticatedState(authToken: authToken));
     } catch (_) {
-      emit(AuthenticationFailedState());
-      emit(NotAuthenticatedState());
+      emit(AuthenticationFailedState(errorMessage: 'Invalid credentials'));
     }
   }
 
@@ -74,5 +76,11 @@ class AuthCubit extends Cubit<AuthState> {
     await performLogout(LogoutParams());
 
     emit(NotAuthenticatedState());
+  }
+
+  void forgetLastError() {
+    if (state is AuthenticationFailedState) {
+      emit(NotAuthenticatedState());
+    }
   }
 }

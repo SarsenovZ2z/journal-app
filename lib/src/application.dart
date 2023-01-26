@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:journal/src/core/services/api.dart';
-import 'package:journal/src/future/data/datasources/user_remote_data_source.dart';
 import 'package:journal/src/future/presentation/bloc/Auth/auth_cubit.dart';
 import 'package:journal/src/future/presentation/bloc/Auth/auth_states.dart';
 import 'package:journal/src/future/presentation/pages/auth_screen.dart';
@@ -17,7 +15,7 @@ class Application extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Theme.of(context).backgroundColor,
+      statusBarColor: Theme.of(context).colorScheme.background,
       statusBarIconBrightness: Theme.of(context).brightness,
     ));
 
@@ -33,17 +31,18 @@ class Application extends StatelessWidget {
         darkTheme: DarkTheme().getThemeData(),
         themeMode: ThemeMode.system,
         home: BlocBuilder<AuthCubit, AuthState>(
-          builder: ((context, state) {
+          builder: (context, state) {
             if (state is AuthenticatedState) {
               return const HomeScreen();
-            } else if (state is AuthenticatingState) {
+            } else if (state is AuthenticatingState &&
+                state.isCheckingOldToken) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
             } else {
               return const AuthScreen();
             }
-          }),
+          },
         ),
       ),
     );

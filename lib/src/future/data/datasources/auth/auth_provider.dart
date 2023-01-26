@@ -7,6 +7,8 @@ abstract class AuthProvider<AuthParam> extends RemoteDataSource {
 
   Future<AuthTokenModel> authenticate(AuthParam params);
 
+  Future<void> logout();
+
   void setAuthToken(AuthTokenEntity? authToken) {
     api.setAuthToken(authToken);
   }

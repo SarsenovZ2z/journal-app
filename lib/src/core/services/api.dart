@@ -20,26 +20,29 @@ class Api {
       ),
     );
 
-    httpClient.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
-        if (_accessToken != null) {
-          options.headers['Authorization'] = _accessToken;
-        }
-        return handler.next(options);
-      },
-      onError: (error, handler) {
-        // if (_accessToken != null && error.response?.statusCode == 401) {
-        //   if (_refreshToken is String) {
-        //     if (await refreshAccessToken()) {
-        //       return handler.resolve(await _retry(error.requestOptions));
-        //     }
-        //   }
+    httpClient.interceptors.clear();
+    httpClient.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          if (_accessToken != null) {
+            options.headers['Authorization'] = _accessToken;
+          }
+          return handler.next(options);
+        },
+        onError: (error, handler) async {
+          // if (_accessToken != null && error.response?.statusCode == 401) {
+          //   if (_refreshToken is String) {
+          //     if (await refreshAccessToken()) {
+          //       return handler.resolve(await _retry(error.requestOptions));
+          //     }
+          //   }
 
-        //   await _logout();
-        // }
-        return handler.next(error);
-      },
-    ));
+          //   await _logout();
+          // }
+          return handler.next(error);
+        },
+      ),
+    );
   }
 
   factory Api.usingAuthToken(AuthTokenEntity authToken) => Api(
