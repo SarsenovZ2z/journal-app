@@ -91,7 +91,6 @@ class AuthRepositoryImpl extends AuthRepository {
     if (accessToken.isEmpty) {
       return null;
     }
-    print(accessToken);
 
     return AuthTokenEntity(
       accessToken: accessToken,

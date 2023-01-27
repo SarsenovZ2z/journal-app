@@ -22,7 +22,8 @@ class Application extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthCubit>(
-            create: ((context) => sl<AuthCubit>()..tryToAuthByToken())),
+          create: (context) => sl<AuthCubit>()..tryToAuthByToken(),
+        ),
       ],
       child: MaterialApp(
         title: 'Journal',
