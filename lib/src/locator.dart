@@ -1,19 +1,20 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:journal/src/core/services/api.dart';
-import 'package:journal/src/future/data/datasources/auth/auth_provider.dart';
-import 'package:journal/src/future/data/datasources/auth/temporary_password_auth/temporary_password_auth_provider.dart';
-import 'package:journal/src/future/data/datasources/user_remote_data_source.dart';
-import 'package:journal/src/future/data/repositories/auth_repository.dart';
-import 'package:journal/src/future/data/repositories/user_repository.dart';
-import 'package:journal/src/future/domain/repositories/auth_repository.dart';
-import 'package:journal/src/future/domain/repositories/user_repository.dart';
-import 'package:journal/src/future/domain/usecases/auth/authenticate_by_credentials.dart';
-import 'package:journal/src/future/domain/usecases/auth/authenticate_by_token.dart';
-import 'package:journal/src/future/domain/usecases/auth/get_temporary_password.dart';
-import 'package:journal/src/future/domain/usecases/auth/logout.dart';
-import 'package:journal/src/future/domain/usecases/get_current_user.dart';
-import 'package:journal/src/future/presentation/bloc/Auth/auth_cubit.dart';
+import 'package:journal/src/features/journal/data/datasources/auth/auth_provider.dart';
+import 'package:journal/src/features/journal/data/datasources/auth/temporary_password_auth/temporary_password_auth_provider.dart';
+import 'package:journal/src/features/journal/data/datasources/user_remote_data_source.dart';
+import 'package:journal/src/features/journal/data/repositories/auth_repository.dart';
+import 'package:journal/src/features/journal/data/repositories/user_repository.dart';
+import 'package:journal/src/features/journal/domain/repositories/auth_repository.dart';
+import 'package:journal/src/features/journal/domain/repositories/user_repository.dart';
+import 'package:journal/src/features/journal/domain/usecases/auth/authenticate_by_credentials.dart';
+import 'package:journal/src/features/journal/domain/usecases/auth/authenticate_by_token.dart';
+import 'package:journal/src/features/journal/domain/usecases/auth/get_temporary_password.dart';
+import 'package:journal/src/features/journal/domain/usecases/auth/logout.dart';
+import 'package:journal/src/features/journal/domain/usecases/get_current_user.dart';
+import 'package:journal/src/features/journal/presentation/bloc/Auth/auth_cubit.dart';
+import 'package:journal/src/features/journal/presentation/bloc/Auth/password/password_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -24,10 +25,14 @@ Future<void> init() async {
   // BLoC / Cubit
   sl.registerFactory<AuthCubit>(
     () => AuthCubit(
-      getTemporaryPassword: sl(),
       authenticateByCredentials: sl(),
       authenticateByToken: sl(),
       performLogout: sl(),
+    ),
+  );
+  sl.registerFactory<PasswordCubit>(
+    () => PasswordCubit(
+      getTemporaryPassword: sl(),
     ),
   );
 

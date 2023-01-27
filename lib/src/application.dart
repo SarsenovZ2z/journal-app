@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:journal/src/future/presentation/bloc/Auth/auth_cubit.dart';
-import 'package:journal/src/future/presentation/bloc/Auth/auth_states.dart';
-import 'package:journal/src/future/presentation/pages/auth_screen.dart';
+import 'package:journal/src/features/journal/presentation/bloc/Auth/auth_cubit.dart';
+import 'package:journal/src/features/journal/presentation/bloc/Auth/auth_states.dart';
+import 'package:journal/src/features/journal/presentation/pages/auth_screen.dart';
 import 'package:journal/src/themes/dark_theme.dart';
 import 'package:journal/src/themes/light_theme.dart';
 import 'package:flutter/services.dart';
-import 'future/presentation/pages/home_screen.dart';
+import 'features/journal/presentation/pages/home_screen.dart';
 import 'locator.dart';
 
 class Application extends StatelessWidget {

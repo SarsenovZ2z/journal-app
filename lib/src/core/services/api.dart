@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:journal/src/future/domain/entities/auth/auth_token_entity.dart';
+import 'package:journal/src/features/journal/domain/entities/auth/auth_token_entity.dart';
 
 class Api {
   late final Dio httpClient;
