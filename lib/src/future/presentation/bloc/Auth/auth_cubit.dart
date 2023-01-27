@@ -1,4 +1,3 @@
-import 'package:journal/src/future/domain/entities/auth/auth_token_entity.dart';
 import 'package:journal/src/future/domain/usecases/auth/authenticate_by_credentials.dart';
 import 'package:journal/src/future/domain/usecases/auth/authenticate_by_token.dart';
 import 'package:journal/src/future/domain/usecases/auth/get_temporary_password.dart';
@@ -20,60 +19,80 @@ class AuthCubit extends Cubit<AuthState> {
   }) : super(NotAuthenticatedState());
 
   Future<void> tryToAuthByToken() async {
-    if (state is AuthenticatingState) {
+    if (state is AuthenticatingByTokenState) {
       return;
     }
 
-    emit(AuthenticatingState(isCheckingOldToken: true));
-    try {
-      final AuthTokenEntity authToken =
-          await authenticateByToken(AuthenticateByTokenParams());
+    emit(AuthenticatingByTokenState());
+    final failureOrAuthToken =
+        await authenticateByToken(AuthenticateByTokenParams());
 
+    failureOrAuthToken.fold((error) {
+      emit(AuthenticationFailedState(errorMessage: error.message));
+    }, (authToken) {
       emit(AuthenticatedState(authToken: authToken));
-    } catch (e) {
-      emit(AuthenticationFailedState(errorMessage: e.toString()));
-    }
+    });
   }
 
   Future<void> getPassword({required String email}) async {
-    return getTemporaryPassword(GetTemporaryPasswordParams(email: email));
+    if (state is RequestingNewPasswordState) {
+      return;
+    }
+
+    emit(RequestingNewPasswordState());
+
+    final failureOrNothing =
+        await getTemporaryPassword(GetTemporaryPasswordParams(email: email));
+
+    failureOrNothing.fold((error) {
+      emit(PasswordResetFailedState());
+    }, (_) {
+      emit(NewPasswordIssuedState(email: email));
+    });
   }
 
   Future<void> authByCredentials({
     required String email,
     required String password,
   }) async {
-    if (state is AuthenticatingState) {
+    if (state is AuthenticatingByCredentialsState) {
       return;
     }
 
     forgetLastError();
 
-    emit(AuthenticatingState());
-    try {
-      final AuthTokenEntity authToken = await authenticateByCredentials(
-        AuthenticateByCredentialsParams(
-          email: email,
-          password: password,
-        ),
-      );
+    emit(AuthenticatingByCredentialsState());
 
+    final failureOrAuthToken = await authenticateByCredentials(
+      AuthenticateByCredentialsParams(
+        email: email,
+        password: password,
+      ),
+    );
+
+    failureOrAuthToken.fold((error) {
+      emit(AuthenticationFailedState(errorMessage: error.message));
+    }, (authToken) {
       emit(AuthenticatedState(authToken: authToken));
-    } catch (_) {
-      emit(AuthenticationFailedState(errorMessage: 'Invalid credentials'));
-    }
+    });
   }
 
   Future<void> logout() async {
     final currentState = state;
+
     if (currentState is LoggingOutState) {
       return;
     }
+
     if (currentState is AuthenticatedState) {
       emit(LoggingOutState(authToken: currentState.authToken));
     }
 
-    await performLogout(LogoutParams());
+    final failureOrNothing = await performLogout(LogoutParams());
+
+    failureOrNothing.fold((error) {
+      // TODO: notify about failure
+    }, (_) {});
 
     emit(NotAuthenticatedState());
   }

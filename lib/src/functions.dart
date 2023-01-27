@@ -5,7 +5,7 @@ Future<ReturnType?> slowAwait<ReturnType>({
   ReturnType? result;
   await Future.wait([
     if (f != null) f.then((value) => result = value),
-    if (duration != null) Future.delayed(duration),
+    // if (duration != null) Future.delayed(duration, () => null),
   ]);
   return result;
 }

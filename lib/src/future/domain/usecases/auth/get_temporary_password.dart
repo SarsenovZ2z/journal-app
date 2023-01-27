@@ -1,7 +1,10 @@
+import 'package:dartz/dartz.dart';
+import 'package:journal/src/core/failure.dart';
 import 'package:journal/src/core/usecase.dart';
 import 'package:journal/src/future/domain/repositories/auth_repository.dart';
 
-class GetTemporaryPassword extends UseCase<void, GetTemporaryPasswordParams> {
+class GetTemporaryPassword
+    extends UseCase<Either<Failure, void>, GetTemporaryPasswordParams> {
   final AuthRepository authRepository;
 
   GetTemporaryPassword({
@@ -9,7 +12,7 @@ class GetTemporaryPassword extends UseCase<void, GetTemporaryPasswordParams> {
   });
 
   @override
-  Future<void> call(GetTemporaryPasswordParams params) async {
+  Future<Either<Failure, void>> call(GetTemporaryPasswordParams params) async {
     return authRepository.getTemporaryPassword(params.email);
   }
 }

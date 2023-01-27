@@ -35,8 +35,7 @@ class Application extends StatelessWidget {
           builder: (context, state) {
             if (state is AuthenticatedState) {
               return const HomeScreen();
-            } else if (state is AuthenticatingState &&
-                state.isCheckingOldToken) {
+            } else if (state is AuthenticatingByTokenState) {
               return const Center(
                 child: CircularProgressIndicator(),
               );

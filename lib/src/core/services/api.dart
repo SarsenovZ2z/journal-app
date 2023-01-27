@@ -29,18 +29,18 @@ class Api {
           }
           return handler.next(options);
         },
-        onError: (error, handler) async {
-          // if (_accessToken != null && error.response?.statusCode == 401) {
-          //   if (_refreshToken is String) {
-          //     if (await refreshAccessToken()) {
-          //       return handler.resolve(await _retry(error.requestOptions));
-          //     }
-          //   }
+        // onError: (error, handler) async {
+        //   // if (_accessToken != null && error.response?.statusCode == 401) {
+        //   //   if (_refreshToken is String) {
+        //   //     if (await refreshAccessToken()) {
+        //   //       return handler.resolve(await _retry(error.requestOptions));
+        //   //     }
+        //   //   }
 
-          //   await _logout();
-          // }
-          return handler.next(error);
-        },
+        //   //   await _logout();
+        //   // }
+        //   return handler.next(error);
+        // },
       ),
     );
   }

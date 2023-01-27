@@ -10,17 +10,6 @@ abstract class AuthState extends Equatable {
 
 class NotAuthenticatedState extends AuthState {}
 
-class AuthenticatingState extends NotAuthenticatedState {
-  final bool isCheckingOldToken;
-
-  AuthenticatingState({this.isCheckingOldToken = false});
-
-  @override
-  List<Object?> get props => [
-        isCheckingOldToken,
-      ];
-}
-
 class AuthenticationFailedState extends NotAuthenticatedState {
   final String errorMessage;
 
@@ -31,6 +20,27 @@ class AuthenticationFailedState extends NotAuthenticatedState {
         errorMessage,
       ];
 }
+
+class RequestingNewPasswordState extends NotAuthenticatedState {}
+
+class PasswordResetFailedState extends NotAuthenticatedState {}
+
+class NewPasswordIssuedState extends NotAuthenticatedState {
+  final String email;
+
+  NewPasswordIssuedState({required this.email});
+
+  @override
+  List<Object?> get props => [
+        email,
+      ];
+}
+
+class AuthenticatingState extends NotAuthenticatedState {}
+
+class AuthenticatingByTokenState extends AuthenticatingState {}
+
+class AuthenticatingByCredentialsState extends AuthenticatingState {}
 
 class AuthenticatedState extends AuthState {
   final AuthTokenEntity authToken;
