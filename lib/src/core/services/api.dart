@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:journal/src/features/journal/domain/entities/auth/auth_token_entity.dart';
+import 'package:journal/src/features/auth/domain/entities/auth_token_entity.dart';
 
 class Api {
   late final Dio httpClient;
@@ -25,7 +25,8 @@ class Api {
       InterceptorsWrapper(
         onRequest: (options, handler) {
           if (_accessToken != null) {
-            options.headers['Authorization'] = _accessToken;
+            options.headers['Authorization'] =
+                "$_accessTokenType $_accessToken";
           }
           return handler.next(options);
         },
@@ -54,7 +55,7 @@ class Api {
   }
 
   Future<bool> refreshAccessToken() async {
-    // TODO: implement refresh token
+    // @TODO: implement refresh token
     // final response = await _httpClient
     //     .post('auth/refresh-token', data: {'refreshToken': refreshToken});
 
@@ -80,24 +81,28 @@ class Api {
     return _authToken?.accessToken;
   }
 
-  String? get _refreshToken {
-    return _authToken?.refreshToken;
+  String? get _accessTokenType {
+    return _authToken?.type;
   }
 
-  Future<void> _logout() async {
-    // return authCubit.logout();
-  }
+  // String? get _refreshToken {
+  //   return _authToken?.refreshToken;
+  // }
 
-  Future<Response<dynamic>> _retry(RequestOptions requestOptions) async {
-    final options = Options(
-      method: requestOptions.method,
-      headers: requestOptions.headers,
-    );
-    return httpClient.request<dynamic>(
-      requestOptions.path,
-      data: requestOptions.data,
-      queryParameters: requestOptions.queryParameters,
-      options: options,
-    );
-  }
+  // Future<void> _logout() async {
+  //   // return authCubit.logout();
+  // }
+
+  // Future<Response<dynamic>> _retry(RequestOptions requestOptions) async {
+  //   final options = Options(
+  //     method: requestOptions.method,
+  //     headers: requestOptions.headers,
+  //   );
+  //   return httpClient.request<dynamic>(
+  //     requestOptions.path,
+  //     data: requestOptions.data,
+  //     queryParameters: requestOptions.queryParameters,
+  //     options: options,
+  //   );
+  // }
 }
