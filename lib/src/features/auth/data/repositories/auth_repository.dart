@@ -54,7 +54,7 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Either<Failure, void>> logout() async {
     try {
-      // @TODO: send logout request
+      await authProvider.logout();
     } catch (_) {}
     authProvider.setAuthToken(null);
     await _forgetAuthToken();

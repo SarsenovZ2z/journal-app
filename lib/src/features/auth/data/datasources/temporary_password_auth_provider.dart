@@ -40,7 +40,9 @@ class TemporaryPasswordAuthProviderImpl extends TemporaryPasswordAuthProvider {
   }
 
   @override
-  Future<void> logout() async {}
+  Future<void> logout() async {
+    // @TODO: send logout request
+  }
 
   @override
   Future<bool> checkAuthToken(AuthTokenEntity authToken) async {
