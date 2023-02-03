@@ -39,8 +39,6 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
 
-    forgetLastError();
-
     emit(AuthenticatingByCredentialsState());
 
     final failureOrAuthToken = await authenticateByCredentials(

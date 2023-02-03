@@ -45,27 +45,16 @@ class _AuthFormState extends State<AuthForm> {
                   readOnly: passwordState is PasswordIssuedState,
                   autofocus: passwordState is! PasswordIssuedState,
                   onFieldSubmitted: (String email) async {
-                    await _load(_onEmailFieldSubmitted(context));
+                    await _load(_getTemporaryPassword(context));
                   },
-                  onChanged: (String password) async {
-                    if (passwordState is PasswordRequestFailedState) {
-                      context.read<PasswordCubit>().forgetLastError();
-                    }
-                  },
-                  autovalidateMode: passwordState is PasswordRequestFailedState
-                      ? AutovalidateMode.always
-                      : AutovalidateMode.disabled,
-                  validator: (String? value) =>
-                      passwordState is PasswordRequestFailedState
-                          ? passwordState.failure.message
-                          : _emailValidator(value),
+                  validator: (String? value) => _emailValidator(value, context),
                   decoration: InputDecoration(
                     label: const Text("Email"),
                     border: const OutlineInputBorder(),
                     prefixIcon: const Icon(Icons.mail),
                     suffixIcon: InkWell(
                       onTap: () async {
-                        await _onEditEmail(context);
+                        _reset(context);
                       },
                       child: const Icon(Icons.edit),
                     ),
@@ -81,23 +70,11 @@ class _AuthFormState extends State<AuthForm> {
                               enabled: !_isLoading,
                               controller: _passwordController,
                               obscureText: _isObscurePasswordEnabled,
-                              autofocus: true,
                               onFieldSubmitted: (String password) async {
-                                await _load(_onPasswordFieldSubmitted(context));
+                                await _load(_authenticate(context));
                               },
-                              onChanged: (String password) async {
-                                if (authState is AuthenticationFailedState) {
-                                  context.read<AuthCubit>().forgetLastError();
-                                }
-                              },
-                              autovalidateMode:
-                                  authState is AuthenticationFailedState
-                                      ? AutovalidateMode.always
-                                      : AutovalidateMode.onUserInteraction,
                               validator: (String? value) =>
-                                  authState is AuthenticationFailedState
-                                      ? authState.failure.message
-                                      : _passwordValidator(value),
+                                  _passwordValidator(value, context),
                               decoration: InputDecoration(
                                 label: const Text("Password"),
                                 border: const OutlineInputBorder(),
@@ -165,37 +142,31 @@ class _AuthFormState extends State<AuthForm> {
     }
   }
 
-  Future<void> _onEditEmail(BuildContext context) async {
-    _reset(context);
-  }
-
-  Future<void> _onEmailFieldSubmitted(BuildContext context) async {
-    await _getTemporaryPassword(context);
-  }
-
-  Future<void> _onPasswordFieldSubmitted(BuildContext context) async {
-    await _authenticate(context);
-  }
-
   Future<void> _authenticate(BuildContext context) async {
+    final AuthCubit authCubit = context.read<AuthCubit>();
+    authCubit.forgetLastError();
     if (_formKey.currentState!.validate()) {
-      await slowAwait<void>(
-        f: context.read<AuthCubit>().authByCredentials(
-              email: _emailController.text,
-              password: _passwordController.text,
-            ),
+      await delay();
+      await authCubit.authByCredentials(
+        email: _emailController.text,
+        password: _passwordController.text,
       );
+      if (authCubit.state is AuthenticationFailedState) {
+        _formKey.currentState!.validate();
+      }
     }
   }
 
   Future<void> _getTemporaryPassword(BuildContext context) async {
+    final passwordCubit = context.read<PasswordCubit>();
     if (_emailFieldKey.currentState!.validate()) {
-      context.read<AuthCubit>().forgetLastError();
-      await slowAwait(
-        f: context
-            .read<PasswordCubit>()
-            .getPassword(email: _emailController.text),
-      );
+      await delay();
+      await passwordCubit.getPassword(email: _emailController.text);
+      if (passwordCubit.state is PasswordRequestFailedState) {
+        _emailFieldKey.currentState!.validate();
+      } else if (passwordCubit.state is PasswordIssuedState) {
+        // set focus
+      }
     }
   }
 
@@ -209,20 +180,37 @@ class _AuthFormState extends State<AuthForm> {
     });
   }
 
-  String? _emailValidator(String? value) {
+  String? _emailValidator(String? value, BuildContext context) {
     if (value!.isEmpty) {
       return "Enter email address";
     }
     if (!_isValidEmail(value)) {
       return "Please enter valid email address";
     }
+
+    final PasswordCubit passwordCubit = context.read<PasswordCubit>();
+    final PasswordState passwordState = passwordCubit.state;
+    if (passwordState is PasswordRequestFailedState) {
+      passwordCubit.forgetLastError();
+      return passwordState.failure.message;
+    }
+
     return null;
   }
 
-  String? _passwordValidator(String? value) {
+  String? _passwordValidator(String? value, BuildContext context) {
     if (value!.isEmpty) {
       return "Enter password";
     }
+
+    final AuthCubit authCubit = context.read<AuthCubit>();
+    final AuthState authState = authCubit.state;
+
+    if (authState is AuthenticationFailedState) {
+      authCubit.forgetLastError();
+      return authState.failure.message;
+    }
+
     return null;
   }
 
