@@ -5,10 +5,10 @@ import 'package:journal/src/features/auth/presentation/bloc/Auth/auth_states.dar
 import 'package:journal/src/features/auth/presentation/pages/auth_screen.dart';
 import 'package:journal/src/features/journal/presentation/pages/loading_screen.dart';
 
-class OnlyAuthenticated extends StatelessWidget {
+class OnlyAuthenticatedScreen extends StatelessWidget {
   final Widget child;
 
-  const OnlyAuthenticated({super.key, required this.child});
+  const OnlyAuthenticatedScreen({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

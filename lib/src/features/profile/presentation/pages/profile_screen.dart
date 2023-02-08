@@ -10,7 +10,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OnlyAuthenticated(
+    return OnlyAuthenticatedScreen(
       child: Scaffold(
         body: ListView(
           children: [
