@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:journal/src/features/auth/presentation/bloc/Auth/auth_cubit.dart';
 import 'package:journal/src/features/auth/presentation/bloc/Auth/auth_states.dart';
 import 'package:journal/src/features/auth/presentation/pages/auth_screen.dart';
-import 'package:journal/src/features/journal/presentation/pages/loading_screen.dart';
+import 'package:journal/src/features/auth/presentation/pages/loading_screen.dart';
 
 class OnlyAuthenticatedScreen extends StatelessWidget {
   final Widget child;
