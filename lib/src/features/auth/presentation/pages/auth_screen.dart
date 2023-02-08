@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:journal/src/features/auth/presentation/widgets/Auth/form.dart';
+import 'package:journal/src/features/auth/presentation/widgets/auth_form.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
@@ -9,18 +9,28 @@ class AuthScreen extends StatelessWidget {
     return Scaffold(
       body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Container(
-                  constraints: const BoxConstraints(
-                    maxWidth: 500,
-                  ),
-                  child: const AuthForm(),
+          Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                constraints: const BoxConstraints(
+                  maxWidth: 500,
                 ),
-              ],
-            ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: Text(
+                        'Sign in',
+                        style: Theme.of(context).textTheme.displaySmall,
+                      ),
+                    ),
+                    const AuthForm(),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
