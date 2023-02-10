@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:journal/src/core/remote_data_source.dart';
 import 'package:journal/src/features/journal/data/models/book_model.dart';
 
@@ -12,10 +14,13 @@ class BookRemoteDataSource extends RemoteDataSource implements BookDataSource {
   Future<List<BookModel>> getCurrentUserBooks() async {
     try {
       final response = await api.httpClient.get('/v1/book/my');
-      print(response);
-      return [];
-    } catch (_) {
-      throw Exception('Someting went wrong!');
+      return List<BookModel>.from(
+        response.data['data'].map(
+          (bookJson) => BookModel.fromJson(bookJson),
+        ),
+      );
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

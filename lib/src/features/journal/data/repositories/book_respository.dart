@@ -14,7 +14,7 @@ class BookRepositoryImpl extends BookRepository {
     try {
       return Right(await bookDataSource.getCurrentUserBooks());
     } catch (e) {
-      return const Left(NetworkFailure('Oops.. Something went wrong!'));
+      return Left(NetworkFailure(e.toString()));
     }
   }
 }
