@@ -7,7 +7,7 @@ import 'package:journal/src/features/journal/data/datasources/book_data_source.d
 import 'package:journal/src/features/journal/data/repositories/book_respository.dart';
 import 'package:journal/src/features/journal/domain/repositories/book_repository.dart';
 import 'package:journal/src/features/journal/domain/usecases/get_current_user_books.dart';
-import 'package:journal/src/features/journal/presentation/bloc/book/current_user_books_cubit.dart';
+import 'package:journal/src/features/journal/presentation/bloc/book/user_books_cubit.dart';
 import 'package:journal/src/features/profile/data/datasources/user_remote_data_source.dart';
 import 'package:journal/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:journal/src/features/profile/data/repositories/user_repository.dart';
@@ -42,7 +42,7 @@ Future<void> init() async {
     ),
   );
 
-  sl.registerFactory<CurrentUserBooksCubit>(() => CurrentUserBooksCubit(
+  sl.registerFactory<UserBooksCubit>(() => UserBooksCubit(
         getCurrentUserBooks: sl(),
       ));
 

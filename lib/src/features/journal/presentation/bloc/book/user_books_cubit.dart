@@ -1,27 +1,31 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:journal/src/features/journal/domain/usecases/get_current_user_books.dart';
-import 'package:journal/src/features/journal/presentation/bloc/book/current_user_books_states.dart';
+import 'package:journal/src/features/journal/presentation/bloc/book/user_books_states.dart';
+import 'package:journal/src/functions.dart';
 
-class CurrentUserBooksCubit extends Cubit<CurrentUserBooksState> {
+class UserBooksCubit extends Cubit<UserBooksState> {
   final GetCurrentUserBooks getCurrentUserBooks;
 
-  CurrentUserBooksCubit({
+  UserBooksCubit({
     required this.getCurrentUserBooks,
-  }) : super(CurrentUserBooksNotLoadedState());
+  }) : super(UserBooksNotLoadedState());
 
   Future<void> loadCurrentUserBooks() async {
-    if (state is CurrentUserBooksLoadingState) {
+    if (state is UserBooksLoadingState) {
       return;
     }
 
-    emit(CurrentUserBooksLoadingState());
+    emit(UserBooksLoadingState());
+
+    await delay();
+
     final failureOrBookEntities =
         await getCurrentUserBooks(GetCurrentUserBooksParams());
 
     failureOrBookEntities.fold((error) {
-      emit(CurrentUserBooksLoadFailedState(failure: error));
+      emit(UserBooksLoadFailedState(failure: error));
     }, (bookEntities) {
-      emit(CurrentUserBooksLoadedState(books: bookEntities));
+      emit(UserBooksLoadedState(books: bookEntities));
     });
   }
 }

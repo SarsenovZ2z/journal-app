@@ -10,6 +10,12 @@ class BookRemoteDataSource extends RemoteDataSource implements BookDataSource {
 
   @override
   Future<List<BookModel>> getCurrentUserBooks() async {
-    return [];
+    try {
+      final response = await api.httpClient.get('/v1/book/my');
+      print(response);
+      return [];
+    } catch (_) {
+      throw Exception('Someting went wrong!');
+    }
   }
 }

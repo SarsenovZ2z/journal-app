@@ -11,6 +11,10 @@ class BookRepositoryImpl extends BookRepository {
 
   @override
   Future<Either<Failure, List<BookEntity>>> getCurrentUserBooks() async {
-    return const Right([]);
+    try {
+      return Right(await bookDataSource.getCurrentUserBooks());
+    } catch (e) {
+      return const Left(NetworkFailure('Oops.. Something went wrong!'));
+    }
   }
 }

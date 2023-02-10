@@ -4,25 +4,25 @@ import 'package:journal/src/core/error/failures.dart';
 
 import 'package:journal/src/features/journal/domain/entities/book_entity.dart';
 
-abstract class CurrentUserBooksState extends Equatable {}
+abstract class UserBooksState extends Equatable {}
 
-class CurrentUserBooksNotLoadedState extends CurrentUserBooksState {
+class UserBooksNotLoadedState extends UserBooksState {
   @override
   List<Object?> get props => [];
 }
 
-class CurrentUserBooksLoadFailedState extends CurrentUserBooksNotLoadedState {
+class UserBooksLoadFailedState extends UserBooksNotLoadedState {
   final Failure failure;
 
-  CurrentUserBooksLoadFailedState({required this.failure});
+  UserBooksLoadFailedState({required this.failure});
 }
 
-class CurrentUserBooksLoadingState extends CurrentUserBooksNotLoadedState {}
+class UserBooksLoadingState extends UserBooksNotLoadedState {}
 
-class CurrentUserBooksLoadedState extends CurrentUserBooksState {
+class UserBooksLoadedState extends UserBooksState {
   final List<BookEntity> books;
 
-  CurrentUserBooksLoadedState({
+  UserBooksLoadedState({
     required this.books,
   });
 

@@ -31,8 +31,7 @@ class _AuthFormState extends State<AuthForm> {
       child: Form(
         key: _formKey,
         child: BlocBuilder<PasswordCubit, PasswordState>(
-            builder: (context, passwordState) {
-          return Column(
+          builder: (context, passwordState) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -118,8 +117,8 @@ class _AuthFormState extends State<AuthForm> {
                 ),
               ),
             ],
-          );
-        }),
+          ),
+        ),
       ),
     );
   }
