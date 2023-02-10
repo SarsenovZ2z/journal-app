@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:journal/src/features/auth/presentation/bloc/Auth/auth_cubit.dart';
+import 'package:journal/src/features/auth/presentation/bloc/auth/auth_cubit.dart';
 import 'package:journal/src/features/auth/presentation/widgets/only_authenticated_screen.dart';
 
 class ProfileScreen extends StatelessWidget {

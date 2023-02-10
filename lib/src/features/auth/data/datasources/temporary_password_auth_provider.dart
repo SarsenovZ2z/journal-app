@@ -1,19 +1,19 @@
+import 'package:journal/src/core/remote_data_source.dart';
 import 'package:journal/src/core/services/api.dart';
 import 'package:journal/src/features/auth/data/datasources/auth_provider.dart';
 import 'package:journal/src/features/auth/data/models/auth_token_model.dart';
 import 'package:journal/src/features/auth/domain/entities/auth_token_entity.dart';
 
-abstract class TemporaryPasswordAuthProvider extends EmailAuthProvider {
-  TemporaryPasswordAuthProvider({required super.api});
-
+abstract class TemporaryPasswordAuthProvider implements EmailAuthProvider {
   Future<void> getTemporaryPassword(String email);
 
   @override
   Future<AuthTokenModel> authenticate(EmailAuthParams params);
 }
 
-class TemporaryPasswordAuthProviderImpl extends TemporaryPasswordAuthProvider {
-  TemporaryPasswordAuthProviderImpl({required super.api});
+class RemoteTemporaryPasswordAuthProvider extends RemoteDataSource
+    implements TemporaryPasswordAuthProvider {
+  RemoteTemporaryPasswordAuthProvider({required super.api});
 
   @override
   Future<AuthTokenModel> authenticate(EmailAuthParams params) async {
@@ -52,5 +52,10 @@ class TemporaryPasswordAuthProviderImpl extends TemporaryPasswordAuthProvider {
     } catch (error) {
       throw Exception('Something went wrong');
     }
+  }
+
+  @override
+  void setAuthToken(AuthTokenEntity? authToken) {
+    api.setAuthToken(authToken);
   }
 }

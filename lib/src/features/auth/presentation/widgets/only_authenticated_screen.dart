@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:journal/src/features/auth/presentation/bloc/Auth/auth_cubit.dart';
-import 'package:journal/src/features/auth/presentation/bloc/Auth/auth_states.dart';
+import 'package:journal/src/features/auth/presentation/bloc/auth/auth_cubit.dart';
+import 'package:journal/src/features/auth/presentation/bloc/auth/auth_states.dart';
 import 'package:journal/src/features/auth/presentation/pages/auth_screen.dart';
 import 'package:journal/src/features/auth/presentation/pages/loading_screen.dart';
 

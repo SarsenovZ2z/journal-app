@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:journal/src/functions.dart';
-import 'package:journal/src/features/auth/presentation/bloc/Auth/auth_cubit.dart';
-import 'package:journal/src/features/auth/presentation/bloc/Auth/auth_states.dart';
-import 'package:journal/src/features/auth/presentation/bloc/Auth/password/password_cubit.dart';
-import 'package:journal/src/features/auth/presentation/bloc/Auth/password/password_states.dart';
+import 'package:journal/src/features/auth/presentation/bloc/auth/auth_cubit.dart';
+import 'package:journal/src/features/auth/presentation/bloc/auth/auth_states.dart';
+import 'package:journal/src/features/auth/presentation/bloc/password/password_cubit.dart';
+import 'package:journal/src/features/auth/presentation/bloc/password/password_states.dart';
 import 'package:journal/src/locator.dart';
 
 class AuthForm extends StatefulWidget {

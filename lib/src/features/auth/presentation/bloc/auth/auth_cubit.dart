@@ -1,7 +1,7 @@
 import 'package:journal/src/features/auth/domain/usecases/authenticate_by_credentials.dart';
 import 'package:journal/src/features/auth/domain/usecases/authenticate_by_token.dart';
 import 'package:journal/src/features/auth/domain/usecases/logout.dart';
-import 'package:journal/src/features/auth/presentation/bloc/Auth/auth_states.dart';
+import 'package:journal/src/features/auth/presentation/bloc/auth/auth_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthCubit extends Cubit<AuthState> {

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:journal/src/features/auth/domain/usecases/get_temporary_password.dart';
-import 'package:journal/src/features/auth/presentation/bloc/Auth/password/password_states.dart';
+import 'package:journal/src/features/auth/presentation/bloc/password/password_states.dart';
 
 class PasswordCubit extends Cubit<PasswordState> {
   final GetTemporaryPassword getTemporaryPassword;

@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:journal/src/core/error/failures.dart';
-import 'package:journal/src/functions.dart';
 import 'package:journal/src/features/auth/data/datasources/auth_provider.dart';
 import 'package:journal/src/features/auth/data/datasources/temporary_password_auth_provider.dart';
 import 'package:journal/src/features/auth/domain/entities/auth_token_entity.dart';

@@ -13,8 +13,8 @@ import 'package:journal/src/features/auth/domain/usecases/authenticate_by_token.
 import 'package:journal/src/features/auth/domain/usecases/get_temporary_password.dart';
 import 'package:journal/src/features/auth/domain/usecases/logout.dart';
 import 'package:journal/src/features/profile/domain/usecases/get_current_user.dart';
-import 'package:journal/src/features/auth/presentation/bloc/Auth/auth_cubit.dart';
-import 'package:journal/src/features/auth/presentation/bloc/Auth/password/password_cubit.dart';
+import 'package:journal/src/features/auth/presentation/bloc/auth/auth_cubit.dart';
+import 'package:journal/src/features/auth/presentation/bloc/password/password_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -78,8 +78,8 @@ Future<void> init() async {
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl());
 
   // DataSources
-  sl.registerLazySingleton<UserRemoteDataSource>(
-    () => UserRemoteDataSourceImpl(
+  sl.registerLazySingleton<UserDataSource>(
+    () => UserRemoteDataSource(
       api: sl(),
     ),
   );
@@ -93,7 +93,7 @@ Future<void> init() async {
   );
 
   sl.registerFactory<TemporaryPasswordAuthProvider>(
-    () => TemporaryPasswordAuthProviderImpl(
+    () => RemoteTemporaryPasswordAuthProvider(
       api: sl(),
     ),
   );

@@ -4,12 +4,12 @@ import 'package:journal/src/features/auth/domain/entities/auth_token_entity.dart
 
 abstract class AuthState extends Equatable {
   const AuthState();
+}
 
+class NotAuthenticatedState extends AuthState {
   @override
   List<Object?> get props => [];
 }
-
-class NotAuthenticatedState extends AuthState {}
 
 class AuthenticationFailedState extends NotAuthenticatedState {
   final Failure failure;
