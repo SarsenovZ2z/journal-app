@@ -3,9 +3,9 @@ import 'package:equatable/equatable.dart';
 class BookEntity extends Equatable {
   final int id;
   final String name;
-  final String? image;
+  final String image;
 
-  const BookEntity({required this.id, required this.name, this.image});
+  const BookEntity({required this.id, required this.name, required this.image});
 
   @override
   List<Object?> get props => [

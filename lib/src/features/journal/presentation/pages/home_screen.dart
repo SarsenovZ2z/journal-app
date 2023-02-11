@@ -22,10 +22,11 @@ class HomeScreen extends StatelessWidget {
                 onRefresh: context.read<UserBooksCubit>().loadCurrentUserBooks,
                 child: GridView.builder(
                   padding: const EdgeInsets.all(5),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     mainAxisSpacing: 5,
                     crossAxisSpacing: 5,
-                    crossAxisCount: 2,
+                    crossAxisCount:
+                        (MediaQuery.of(context).size.width / 300).ceil(),
                   ),
                   itemCount: userBooksState.books.length,
                   itemBuilder: (context, index) =>
@@ -57,26 +58,21 @@ class _Book extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {},
-      child: Container(
-        child: Card(
-          child: GridTile(
-            footer: GridTileBar(
-              backgroundColor: Theme.of(context).cardColor,
-              title: Text(
-                book.name,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
+      child: Card(
+        child: GridTile(
+          footer: GridTileBar(
+            backgroundColor: Theme.of(context).cardColor,
+            title: Text(
+              book.name,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.labelLarge,
             ),
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                    book.image ??
-                        'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
-                  ),
-                ),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: NetworkImage(book.image),
               ),
             ),
           ),

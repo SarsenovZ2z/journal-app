@@ -4,12 +4,14 @@ class BookModel extends BookEntity {
   const BookModel({
     required super.id,
     required super.name,
+    required super.image,
   });
 
   factory BookModel.fromJson(Map<String, dynamic> json) {
     return BookModel(
       id: json['id'],
       name: json['name'],
+      image: json['image'],
     );
   }
 
@@ -17,6 +19,7 @@ class BookModel extends BookEntity {
     return {
       "id": id,
       "name": name,
+      "image": image,
     };
   }
 }
