@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:journal/src/features/auth/presentation/bloc/auth/auth_cubit.dart';
 import 'package:journal/src/features/auth/presentation/widgets/only_authenticated_screen.dart';
 import 'package:journal/src/features/profile/presentation/pages/profile_screen.dart';
 import 'package:journal/src/themes/dark_theme.dart';
 import 'package:journal/src/themes/light_theme.dart';
-import 'package:flutter/services.dart';
-import 'features/journal/presentation/pages/home_screen.dart';
+import 'package:journal/src/features/books/presentation/pages/book_screen.dart';
+import 'package:journal/src/features/books/presentation/pages/books_screen.dart';
 import 'locator.dart';
 
 class Application extends StatelessWidget {
@@ -33,7 +34,10 @@ class Application extends StatelessWidget {
         themeMode: ThemeMode.system,
         routes: {
           '/': (context) => const OnlyAuthenticatedScreen(
-                child: HomeScreen(),
+                child: BooksScreen(),
+              ),
+          '/book': (context) => const OnlyAuthenticatedScreen(
+                child: BookScreen(),
               ),
           '/profile': (context) => const OnlyAuthenticatedScreen(
                 child: ProfileScreen(),

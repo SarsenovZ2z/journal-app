@@ -3,11 +3,12 @@ import 'package:get_it/get_it.dart';
 import 'package:journal/src/core/services/api.dart';
 import 'package:journal/src/features/auth/data/datasources/auth_provider.dart';
 import 'package:journal/src/features/auth/data/datasources/temporary_password_auth_provider.dart';
-import 'package:journal/src/features/journal/data/datasources/book_data_source.dart';
-import 'package:journal/src/features/journal/data/repositories/book_respository.dart';
-import 'package:journal/src/features/journal/domain/repositories/book_repository.dart';
-import 'package:journal/src/features/journal/domain/usecases/get_current_user_books.dart';
-import 'package:journal/src/features/journal/presentation/bloc/book/user_books_cubit.dart';
+import 'package:journal/src/features/books/data/datasources/book_data_source.dart';
+import 'package:journal/src/features/books/data/repositories/book_respository.dart';
+import 'package:journal/src/features/books/domain/repositories/book_repository.dart';
+import 'package:journal/src/features/books/domain/usecases/get_current_user_books.dart';
+import 'package:journal/src/features/books/presentation/bloc/book_cubit.dart';
+import 'package:journal/src/features/books/presentation/bloc/user_books_cubit.dart';
 import 'package:journal/src/features/profile/data/datasources/user_remote_data_source.dart';
 import 'package:journal/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:journal/src/features/profile/data/repositories/user_repository.dart';
@@ -42,9 +43,15 @@ Future<void> init() async {
     ),
   );
 
-  sl.registerFactory<UserBooksCubit>(() => UserBooksCubit(
-        getCurrentUserBooks: sl(),
-      ));
+  sl.registerFactory<UserBooksCubit>(
+    () => UserBooksCubit(
+      getCurrentUserBooks: sl(),
+    ),
+  );
+
+  sl.registerFactory<BookCubit>(
+    () => BookCubit(),
+  );
 
   // UseCases
   sl.registerLazySingleton<GetTemporaryPassword>(
@@ -77,9 +84,11 @@ Future<void> init() async {
     ),
   );
 
-  sl.registerLazySingleton<GetCurrentUserBooks>(() => GetCurrentUserBooks(
-        bookRepository: sl(),
-      ));
+  sl.registerLazySingleton<GetCurrentUserBooks>(
+    () => GetCurrentUserBooks(
+      bookRepository: sl(),
+    ),
+  );
 
   // Repositories
   sl.registerLazySingleton<AuthRepository>(
@@ -91,9 +100,11 @@ Future<void> init() async {
 
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl());
 
-  sl.registerLazySingleton<BookRepository>(() => BookRepositoryImpl(
-        bookDataSource: sl(),
-      ));
+  sl.registerLazySingleton<BookRepository>(
+    () => BookRepositoryImpl(
+      bookDataSource: sl(),
+    ),
+  );
 
   // DataSources
   sl.registerLazySingleton<UserDataSource>(
@@ -116,9 +127,11 @@ Future<void> init() async {
     ),
   );
 
-  sl.registerLazySingleton<BookDataSource>(() => BookRemoteDataSource(
-        api: sl(),
-      ));
+  sl.registerLazySingleton<BookDataSource>(
+    () => BookRemoteDataSource(
+      api: sl(),
+    ),
+  );
 
   // External
   sl.registerLazySingleton<FlutterSecureStorage>(

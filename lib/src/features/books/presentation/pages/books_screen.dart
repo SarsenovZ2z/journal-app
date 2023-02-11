@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:journal/src/features/journal/domain/entities/book_entity.dart';
-import 'package:journal/src/features/journal/presentation/bloc/book/user_books_cubit.dart';
-import 'package:journal/src/features/journal/presentation/bloc/book/user_books_states.dart';
+import 'package:journal/src/features/books/domain/entities/book_entity.dart';
+import 'package:journal/src/features/books/presentation/bloc/user_books_cubit.dart';
+import 'package:journal/src/features/books/presentation/bloc/user_books_states.dart';
+import 'package:journal/src/features/books/presentation/pages/book_screen.dart';
 import 'package:journal/src/locator.dart';
 
-class HomeScreen extends StatelessWidget {
+class BooksScreen extends StatelessWidget {
   static const routeName = '/';
 
-  const HomeScreen({super.key});
+  const BooksScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +58,12 @@ class _Book extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context).pushNamed(
+          '/book',
+          arguments: BookScreenArguments(id: book.id),
+        );
+      },
       child: Card(
         child: GridTile(
           footer: GridTileBar(

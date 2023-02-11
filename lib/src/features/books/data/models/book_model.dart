@@ -1,4 +1,4 @@
-import 'package:journal/src/features/journal/domain/entities/book_entity.dart';
+import 'package:journal/src/features/books/domain/entities/book_entity.dart';
 
 class BookModel extends BookEntity {
   const BookModel({

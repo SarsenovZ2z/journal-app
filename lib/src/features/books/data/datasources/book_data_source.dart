@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:journal/src/core/remote_data_source.dart';
-import 'package:journal/src/features/journal/data/models/book_model.dart';
+import 'package:journal/src/features/books/data/models/book_model.dart';
 
 abstract class BookDataSource {
   Future<List<BookModel>> getCurrentUserBooks();

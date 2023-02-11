@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:journal/src/core/error/failures.dart';
 import 'package:journal/src/core/usecase.dart';
-import 'package:journal/src/features/journal/domain/entities/book_entity.dart';
-import 'package:journal/src/features/journal/domain/repositories/book_repository.dart';
+import 'package:journal/src/features/books/domain/entities/book_entity.dart';
+import 'package:journal/src/features/books/domain/repositories/book_repository.dart';
 
 class GetCurrentUserBooks extends UseCase<Either<Failure, List<BookEntity>>,
     GetCurrentUserBooksParams> {
