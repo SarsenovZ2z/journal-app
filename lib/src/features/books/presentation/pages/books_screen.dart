@@ -59,10 +59,7 @@ class _Book extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(
-          '/book',
-          arguments: BookScreenArguments(id: book.id),
-        );
+        Navigator.of(context).pushNamed('/book/${book.id}');
       },
       child: Card(
         child: GridTile(

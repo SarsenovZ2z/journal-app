@@ -1,6 +1,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:journal/src/routes.dart' as router;
 import 'package:journal/src/core/services/api.dart';
+import 'package:journal/src/core/services/url_resolver.dart';
 import 'package:journal/src/features/auth/data/datasources/auth_provider.dart';
 import 'package:journal/src/features/auth/data/datasources/temporary_password_auth_provider.dart';
 import 'package:journal/src/features/books/data/datasources/book_data_source.dart';
@@ -27,6 +29,7 @@ final sl = GetIt.instance;
 Future<void> init() async {
   // Services
   sl.registerLazySingleton<Api>(() => Api());
+  sl.registerSingletonAsync<UrlResolver>(() => router.init());
 
   // BLoC / Cubit
   sl.registerFactory<AuthCubit>(
