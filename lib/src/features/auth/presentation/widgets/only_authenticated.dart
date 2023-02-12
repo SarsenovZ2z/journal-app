@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:journal/src/features/auth/presentation/bloc/auth/auth_cubit.dart';
 import 'package:journal/src/features/auth/presentation/bloc/auth/auth_states.dart';
 import 'package:journal/src/features/auth/presentation/pages/auth_screen.dart';
-import 'package:journal/src/features/auth/presentation/pages/loading_screen.dart';
 
 class OnlyAuthenticated extends StatelessWidget {
   final Widget authForm;
@@ -14,7 +13,7 @@ class OnlyAuthenticated extends StatelessWidget {
     super.key,
     required this.child,
     this.authForm = const AuthScreen(),
-    this.loading = const LoadingScreen(),
+    this.loading = const _Loading(),
   });
 
   @override
@@ -31,6 +30,19 @@ class OnlyAuthenticated extends StatelessWidget {
 
         return child;
       },
+    );
+  }
+}
+
+class _Loading extends StatelessWidget {
+  const _Loading();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }
