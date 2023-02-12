@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:journal/src/features/books/domain/usecases/get_book.dart';
 import 'package:journal/src/features/books/presentation/bloc/book_state.dart';
-import 'package:journal/src/functions.dart';
 
 class BookCubit extends Cubit<BookState> {
   final GetBook getBook;
@@ -16,7 +15,6 @@ class BookCubit extends Cubit<BookState> {
     }
 
     emit(BookLoadingState(oldState: state));
-    await delay();
     final failureOrBook = await getBook(GetBookParams(id: id));
     failureOrBook.fold((failure) {
       emit(BookLoadingFailedState(failure: failure));

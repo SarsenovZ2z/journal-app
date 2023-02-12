@@ -18,33 +18,30 @@ class BooksScreen extends StatelessWidget {
         body: BlocBuilder<UserBooksCubit, UserBooksState>(
           builder: (context, userBooksState) => RefreshIndicator(
             onRefresh: context.read<UserBooksCubit>().loadCurrentUserBooks,
-            child: _books(context, userBooksState),
+            child: _booksWrapper(context, userBooksState),
           ),
         ),
       ),
     );
   }
-}
 
-Widget _books(BuildContext context, UserBooksState state) {
-  if (state is UserBooksLoadingState) {
-    state = state.oldState;
-  }
+  Widget _booksWrapper(BuildContext context, UserBooksState state) {
+    if (state is UserBooksLoadingState) {
+      state = state.oldState;
+    }
 
-  if (state is UserBooksLoadedState) {
-    return RefreshIndicator(
-      onRefresh: context.read<UserBooksCubit>().loadCurrentUserBooks,
-      child: _BooksGrid(books: state.books),
+    if (state is UserBooksLoadedState) {
+      return _BooksGrid(books: state.books);
+    }
+
+    if (state is UserBooksLoadFailedState) {
+      return Center(child: Text(state.failure.message));
+    }
+
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
-
-  if (state is UserBooksLoadFailedState) {
-    return Center(child: Text(state.failure.message));
-  }
-
-  return const Center(
-    child: CircularProgressIndicator(),
-  );
 }
 
 class _BooksGrid extends StatelessWidget {
