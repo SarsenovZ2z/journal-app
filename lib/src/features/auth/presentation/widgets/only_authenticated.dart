@@ -5,21 +5,28 @@ import 'package:journal/src/features/auth/presentation/bloc/auth/auth_states.dar
 import 'package:journal/src/features/auth/presentation/pages/auth_screen.dart';
 import 'package:journal/src/features/auth/presentation/pages/loading_screen.dart';
 
-class OnlyAuthenticatedScreen extends StatelessWidget {
+class OnlyAuthenticated extends StatelessWidget {
+  final Widget authForm;
+  final Widget loading;
   final Widget child;
 
-  const OnlyAuthenticatedScreen({super.key, required this.child});
+  const OnlyAuthenticated({
+    super.key,
+    required this.child,
+    this.authForm = const AuthScreen(),
+    this.loading = const LoadingScreen(),
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
         if (state is AuthenticatingByTokenState || state is LoggingOutState) {
-          return const LoadingScreen();
+          return loading;
         }
 
         if (state is NotAuthenticatedState) {
-          return const AuthScreen();
+          return authForm;
         }
 
         return child;

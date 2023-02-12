@@ -1,4 +1,4 @@
-import 'package:journal/src/features/auth/presentation/widgets/only_authenticated_screen.dart';
+import 'package:journal/src/features/auth/presentation/widgets/only_authenticated.dart';
 import 'package:journal/src/features/books/presentation/pages/book_screen.dart';
 import 'package:journal/src/features/books/presentation/pages/books_screen.dart';
 import 'package:journal/src/features/profile/presentation/pages/profile_screen.dart';
@@ -11,7 +11,7 @@ Future<UrlResolver> init() async {
       RouteWrapper(
         name: 'home',
         path: '/',
-        child: (context, args) => const OnlyAuthenticatedScreen(
+        child: (context, args) => const OnlyAuthenticated(
           child: BooksScreen(),
         ),
       ),
@@ -21,14 +21,14 @@ Future<UrlResolver> init() async {
         where: {
           'id': '\\d+',
         },
-        child: (context, args) => OnlyAuthenticatedScreen(
+        child: (context, args) => OnlyAuthenticated(
           child: BookScreen(id: int.parse(args['id'])),
         ),
       ),
       RouteWrapper(
         name: 'profile',
         path: '/profile',
-        child: (context, args) => const OnlyAuthenticatedScreen(
+        child: (context, args) => const OnlyAuthenticated(
           child: ProfileScreen(),
         ),
       ),

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:journal/src/core/services/url_resolver.dart';
 import 'package:journal/src/features/auth/presentation/bloc/auth/auth_cubit.dart';
-import 'package:journal/src/features/auth/presentation/widgets/only_authenticated_screen.dart';
+import 'package:journal/src/features/auth/presentation/widgets/only_authenticated.dart';
 import 'package:journal/src/features/profile/presentation/pages/profile_screen.dart';
 import 'package:journal/src/themes/dark_theme.dart';
 import 'package:journal/src/themes/light_theme.dart';
