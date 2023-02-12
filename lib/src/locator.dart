@@ -29,10 +29,33 @@ final sl = GetIt.instance;
 
 Future<void> init() async {
   // Services
-  sl.registerLazySingleton<Api>(() => Api());
-  sl.registerSingletonAsync<UrlResolver>(() => router.init());
+  _registerServices();
 
   // BLoC / Cubit
+  _registerBlocs();
+
+  // UseCases
+  _registerUseCases();
+
+  // Repositories
+  _registerRepositories();
+
+  // DataSources
+  _registerDataSources();
+
+  // External
+  sl.registerLazySingleton<FlutterSecureStorage>(
+    () => const FlutterSecureStorage(),
+  );
+}
+
+Future<void> _registerServices() async {
+  sl.registerLazySingleton<Api>(() => Api());
+
+  sl.registerSingletonAsync<UrlResolver>(() => router.init());
+}
+
+Future<void> _registerBlocs() async {
   sl.registerFactory<AuthCubit>(
     () => AuthCubit(
       authenticateByCredentials: sl(),
@@ -56,51 +79,53 @@ Future<void> init() async {
   sl.registerFactory<BookCubit>(
     () => BookCubit(getBook: sl()),
   );
+}
 
-  // UseCases
-  sl.registerLazySingleton<GetTemporaryPassword>(
+Future<void> _registerUseCases() async {
+  sl.registerFactory<GetTemporaryPassword>(
     () => GetTemporaryPassword(
       authRepository: sl(),
     ),
   );
 
-  sl.registerLazySingleton<AuthenticateByCredentials>(
+  sl.registerFactory<AuthenticateByCredentials>(
     () => AuthenticateByCredentials(
       authRepository: sl(),
     ),
   );
 
-  sl.registerLazySingleton<AuthenticateByToken>(
+  sl.registerFactory<AuthenticateByToken>(
     () => AuthenticateByToken(
       authRepository: sl(),
     ),
   );
 
-  sl.registerLazySingleton<Logout>(
+  sl.registerFactory<Logout>(
     () => Logout(
       authRepository: sl(),
     ),
   );
 
-  sl.registerLazySingleton<GetCurrentUser>(
+  sl.registerFactory<GetCurrentUser>(
     () => GetCurrentUser(
       userRepository: sl(),
     ),
   );
 
-  sl.registerLazySingleton<GetCurrentUserBooks>(
+  sl.registerFactory<GetCurrentUserBooks>(
     () => GetCurrentUserBooks(
       bookRepository: sl(),
     ),
   );
 
-  sl.registerLazySingleton<GetBook>(
+  sl.registerFactory<GetBook>(
     () => GetBook(
       bookRepository: sl(),
     ),
   );
+}
 
-  // Repositories
+Future<void> _registerRepositories() async {
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       secureStorage: sl(),
@@ -115,9 +140,10 @@ Future<void> init() async {
       bookDataSource: sl(),
     ),
   );
+}
 
-  // DataSources
-  sl.registerLazySingleton<UserDataSource>(
+Future<void> _registerDataSources() async {
+  sl.registerFactory<UserDataSource>(
     () => UserRemoteDataSource(
       api: sl(),
     ),
@@ -137,14 +163,9 @@ Future<void> init() async {
     ),
   );
 
-  sl.registerLazySingleton<BookDataSource>(
+  sl.registerFactory<BookDataSource>(
     () => BookRemoteDataSource(
       api: sl(),
     ),
-  );
-
-  // External
-  sl.registerLazySingleton<FlutterSecureStorage>(
-    () => const FlutterSecureStorage(),
   );
 }
