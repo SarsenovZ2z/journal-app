@@ -4,4 +4,6 @@ import 'package:journal/src/features/books/domain/entities/book_entity.dart';
 
 abstract class BookRepository {
   Future<Either<Failure, List<BookEntity>>> getCurrentUserBooks();
+
+  Future<Either<Failure, BookEntity>> getBook(int id);
 }

@@ -1,17 +1,27 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:journal/src/features/books/domain/usecases/get_book.dart';
 import 'package:journal/src/features/books/presentation/bloc/book_state.dart';
 import 'package:journal/src/functions.dart';
 
 class BookCubit extends Cubit<BookState> {
-  BookCubit() : super(BookNotLoadedState());
+  final GetBook getBook;
+
+  BookCubit({
+    required this.getBook,
+  }) : super(BookNotLoadedState());
 
   Future<void> loadBook(int id) async {
     if (state is BookLoadingState) {
       return;
     }
 
-    emit(BookLoadingState());
+    emit(BookLoadingState(oldState: state));
     await delay();
-    emit(BookLoadedState());
+    final failureOrBook = await getBook(GetBookParams(id: id));
+    failureOrBook.fold((failure) {
+      emit(BookLoadingFailedState(failure: failure));
+    }, (book) {
+      emit(BookLoadedState(book: book));
+    });
   }
 }

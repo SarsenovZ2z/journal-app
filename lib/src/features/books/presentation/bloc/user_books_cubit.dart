@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:journal/src/features/books/domain/usecases/get_current_user_books.dart';
 import 'package:journal/src/features/books/presentation/bloc/user_books_states.dart';
+import 'package:journal/src/functions.dart';
 
 class UserBooksCubit extends Cubit<UserBooksState> {
   final GetCurrentUserBooks getCurrentUserBooks;
@@ -14,15 +15,17 @@ class UserBooksCubit extends Cubit<UserBooksState> {
       return;
     }
 
-    emit(UserBooksLoadingState());
+    emit(UserBooksLoadingState(oldState: state));
 
-    final failureOrBookEntities =
+    await delay();
+
+    final failureOrBooks =
         await getCurrentUserBooks(GetCurrentUserBooksParams());
 
-    failureOrBookEntities.fold((error) {
+    failureOrBooks.fold((error) {
       emit(UserBooksLoadFailedState(failure: error));
-    }, (bookEntities) {
-      emit(UserBooksLoadedState(books: bookEntities));
+    }, (books) {
+      emit(UserBooksLoadedState(books: books));
     });
   }
 }

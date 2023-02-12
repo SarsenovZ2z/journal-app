@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:journal/src/features/books/domain/entities/book_entity.dart';
 import 'package:journal/src/features/books/presentation/bloc/user_books_cubit.dart';
 import 'package:journal/src/features/books/presentation/bloc/user_books_states.dart';
-import 'package:journal/src/features/books/presentation/pages/book_screen.dart';
 import 'package:journal/src/locator.dart';
 
 class BooksScreen extends StatelessWidget {
@@ -17,35 +16,53 @@ class BooksScreen extends StatelessWidget {
       create: (context) => sl<UserBooksCubit>()..loadCurrentUserBooks(),
       child: Scaffold(
         body: BlocBuilder<UserBooksCubit, UserBooksState>(
-          builder: (context, userBooksState) {
-            if (userBooksState is UserBooksLoadedState) {
-              return RefreshIndicator(
-                onRefresh: context.read<UserBooksCubit>().loadCurrentUserBooks,
-                child: GridView.builder(
-                  padding: const EdgeInsets.all(5),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    mainAxisSpacing: 5,
-                    crossAxisSpacing: 5,
-                    crossAxisCount:
-                        (MediaQuery.of(context).size.width / 300).ceil(),
-                  ),
-                  itemCount: userBooksState.books.length,
-                  itemBuilder: (context, index) =>
-                      _Book(book: userBooksState.books[index]),
-                ),
-              );
-            }
-
-            if (userBooksState is UserBooksLoadFailedState) {
-              return Center(child: Text(userBooksState.failure.message));
-            }
-
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+          builder: (context, userBooksState) => RefreshIndicator(
+            onRefresh: context.read<UserBooksCubit>().loadCurrentUserBooks,
+            child: _books(context, userBooksState),
+          ),
         ),
       ),
+    );
+  }
+}
+
+Widget _books(BuildContext context, UserBooksState state) {
+  if (state is UserBooksLoadingState) {
+    state = state.oldState;
+  }
+
+  if (state is UserBooksLoadedState) {
+    return RefreshIndicator(
+      onRefresh: context.read<UserBooksCubit>().loadCurrentUserBooks,
+      child: _BooksGrid(books: state.books),
+    );
+  }
+
+  if (state is UserBooksLoadFailedState) {
+    return Center(child: Text(state.failure.message));
+  }
+
+  return const Center(
+    child: CircularProgressIndicator(),
+  );
+}
+
+class _BooksGrid extends StatelessWidget {
+  final List<BookEntity> books;
+
+  const _BooksGrid({required this.books});
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(5),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        mainAxisSpacing: 5,
+        crossAxisSpacing: 5,
+        crossAxisCount: (MediaQuery.of(context).size.width / 300).ceil(),
+      ),
+      itemCount: books.length,
+      itemBuilder: (context, index) => _Book(book: books[index]),
     );
   }
 }

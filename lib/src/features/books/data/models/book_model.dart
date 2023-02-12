@@ -1,3 +1,4 @@
+import 'package:journal/src/features/books/data/models/chapter_model.dart';
 import 'package:journal/src/features/books/domain/entities/book_entity.dart';
 
 class BookModel extends BookEntity {
@@ -5,6 +6,7 @@ class BookModel extends BookEntity {
     required super.id,
     required super.name,
     required super.image,
+    required super.chapters,
   });
 
   factory BookModel.fromJson(Map<String, dynamic> json) {
@@ -12,6 +14,9 @@ class BookModel extends BookEntity {
       id: json['id'],
       name: json['name'],
       image: json['image'],
+      chapters: ((json['chapters'] ?? []) as List<dynamic>)
+          .map((chapterJson) => ChapterModel.fromJson(chapterJson))
+          .toList(),
     );
   }
 
@@ -20,6 +25,7 @@ class BookModel extends BookEntity {
       "id": id,
       "name": name,
       "image": image,
+      "chapters": chapters,
     };
   }
 }

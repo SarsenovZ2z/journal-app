@@ -17,4 +17,13 @@ class BookRepositoryImpl extends BookRepository {
       return Left(NetworkFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, BookEntity>> getBook(int id) async {
+    try {
+      return Right(await bookDataSource.getBook(id));
+    } catch (e) {
+      return Left(NetworkFailure(e.toString()));
+    }
+  }
 }

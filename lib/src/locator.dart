@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:journal/src/features/books/domain/usecases/get_book.dart';
 import 'package:journal/src/routes.dart' as router;
 import 'package:journal/src/core/services/api.dart';
 import 'package:journal/src/core/services/url_resolver.dart';
@@ -53,7 +54,7 @@ Future<void> init() async {
   );
 
   sl.registerFactory<BookCubit>(
-    () => BookCubit(),
+    () => BookCubit(getBook: sl()),
   );
 
   // UseCases
@@ -89,6 +90,12 @@ Future<void> init() async {
 
   sl.registerLazySingleton<GetCurrentUserBooks>(
     () => GetCurrentUserBooks(
+      bookRepository: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton<GetBook>(
+    () => GetBook(
       bookRepository: sl(),
     ),
   );
