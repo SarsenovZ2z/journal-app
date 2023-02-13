@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:journal/src/features/books/presentation/bloc/create_book_cubit.dart';
@@ -162,7 +160,11 @@ class _CreateBookFormState extends State<CreateBookForm> {
     final CreateBookCubit createBookCubit = context.read<CreateBookCubit>();
 
     if (_formKey.currentState!.validate()) {
-      await delay();
+      await createBookCubit.create(
+        name: _nameController.text,
+        password: _passwordController.text,
+        image: _image,
+      );
     }
   }
 

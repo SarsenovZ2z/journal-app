@@ -26,4 +26,14 @@ class BookRepositoryImpl extends BookRepository {
       return Left(NetworkFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, BookEntity>> createBook(
+      String name, String password, dynamic image) async {
+    try {
+      return Right(await bookDataSource.createBook(name, password, image));
+    } catch (e) {
+      return Left(NetworkFailure(e.toString()));
+    }
+  }
 }

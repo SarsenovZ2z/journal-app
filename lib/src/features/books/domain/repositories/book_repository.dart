@@ -6,4 +6,7 @@ abstract class BookRepository {
   Future<Either<Failure, List<BookEntity>>> getCurrentUserBooks();
 
   Future<Either<Failure, BookEntity>> getBook(int id);
+
+  Future<Either<Failure, BookEntity>> createBook(
+      String name, String password, dynamic image);
 }

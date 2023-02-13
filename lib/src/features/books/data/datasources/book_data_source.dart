@@ -5,6 +5,8 @@ abstract class BookDataSource {
   Future<List<BookModel>> getCurrentUserBooks();
 
   Future<BookModel> getBook(int id);
+
+  Future<BookModel> createBook(String name, String password, dynamic image);
 }
 
 class BookRemoteDataSource extends RemoteDataSource implements BookDataSource {
@@ -28,6 +30,20 @@ class BookRemoteDataSource extends RemoteDataSource implements BookDataSource {
   Future<BookModel> getBook(int id) async {
     try {
       final response = await api.httpClient.get('/v1/book/$id');
+      return BookModel.fromJson(response.data['data']);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<BookModel> createBook(String name, String password, image) async {
+    try {
+      final response = await api.httpClient.post('/v1/book', data: {
+        "name": name,
+        "password": password,
+        // "image": image,
+      });
       return BookModel.fromJson(response.data['data']);
     } catch (e) {
       throw Exception(e.toString());
