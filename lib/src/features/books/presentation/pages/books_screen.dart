@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:journal/src/features/books/domain/entities/book_entity.dart';
 import 'package:journal/src/features/books/presentation/bloc/user_books_cubit.dart';
 import 'package:journal/src/features/books/presentation/bloc/user_books_states.dart';
+import 'package:journal/src/features/books/presentation/widgets/create_book_form.dart';
 import 'package:journal/src/locator.dart';
 
 class BooksScreen extends StatelessWidget {
@@ -12,13 +13,31 @@ class BooksScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<UserBooksCubit>(
+    return BlocProvider(
       create: (context) => sl<UserBooksCubit>()..loadCurrentUserBooks(),
-      child: Scaffold(
-        body: BlocBuilder<UserBooksCubit, UserBooksState>(
-          builder: (context, userBooksState) => RefreshIndicator(
-            onRefresh: context.read<UserBooksCubit>().loadCurrentUserBooks,
-            child: _booksWrapper(context, userBooksState),
+      child: BlocBuilder<UserBooksCubit, UserBooksState>(
+        builder: (context, userBooksState) => RefreshIndicator(
+          onRefresh: context.read<UserBooksCubit>().loadCurrentUserBooks,
+          child: Scaffold(
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: () {
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) {
+                    return const CreateBookForm();
+                  },
+                );
+              },
+              icon: const Icon(Icons.add),
+              label: const Text('Create new'),
+            ),
+            body: Center(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 1200),
+                child: _booksWrapper(context, userBooksState),
+              ),
+            ),
           ),
         ),
       ),
@@ -56,7 +75,9 @@ class _BooksGrid extends StatelessWidget {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         mainAxisSpacing: 5,
         crossAxisSpacing: 5,
-        crossAxisCount: (MediaQuery.of(context).size.width / 300).ceil(),
+        crossAxisCount: MediaQuery.of(context).size.width > 1200
+            ? 4
+            : (MediaQuery.of(context).size.width / 360).ceil(),
       ),
       itemCount: books.length,
       itemBuilder: (context, index) => _Book(book: books[index]),
@@ -76,17 +97,32 @@ class _Book extends StatelessWidget {
         Navigator.of(context).pushNamed('/book/${book.id}');
       },
       child: Card(
+        margin: const EdgeInsets.all(8),
         child: GridTile(
+          header: GridTileBar(
+            backgroundColor: Colors.transparent,
+            trailing: InkResponse(
+              onTap: () {
+                print('show menu');
+              },
+              child: Icon(
+                Icons.menu,
+                color: Theme.of(context).iconTheme.color,
+              ),
+            ),
+          ),
           footer: GridTileBar(
-            backgroundColor: Theme.of(context).cardColor,
+            backgroundColor: Theme.of(context).cardColor.withAlpha(120),
             title: Text(
               book.name,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.labelLarge,
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
           ),
-          child: Container(
+          child: DecoratedBox(
+            position: DecorationPosition.background,
             decoration: BoxDecoration(
+              color: Colors.transparent,
               image: DecorationImage(
                 fit: BoxFit.cover,
                 image: NetworkImage(book.image),

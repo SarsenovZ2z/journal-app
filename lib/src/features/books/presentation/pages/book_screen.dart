@@ -13,13 +13,13 @@ class BookScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<BookCubit>(
       create: (context) => sl<BookCubit>()..loadBook(id),
-      child: Scaffold(
-        body: BlocBuilder<BookCubit, BookState>(
-          builder: (context, bookState) => RefreshIndicator(
-            onRefresh: () async {
-              await context.read<BookCubit>().loadBook(id);
-            },
-            child: _bookWrapper(context, bookState),
+      child: BlocBuilder<BookCubit, BookState>(
+        builder: (context, bookState) => RefreshIndicator(
+          onRefresh: () async {
+            await context.read<BookCubit>().loadBook(id);
+          },
+          child: Scaffold(
+            body: _bookWrapper(context, bookState),
           ),
         ),
       ),
