@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:journal/src/features/books/domain/usecases/get_book.dart';
+import 'package:journal/src/features/books/presentation/bloc/create_book_cubit.dart';
 import 'package:journal/src/routes.dart' as router;
 import 'package:journal/src/core/services/api.dart';
 import 'package:journal/src/core/services/url_resolver.dart';
@@ -78,6 +79,10 @@ Future<void> _registerBlocs() async {
 
   sl.registerFactory<BookCubit>(
     () => BookCubit(getBook: sl()),
+  );
+
+  sl.registerFactory<CreateBookCubit>(
+    () => CreateBookCubit(),
   );
 }
 
