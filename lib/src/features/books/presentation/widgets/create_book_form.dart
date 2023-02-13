@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:journal/src/features/books/presentation/bloc/book_cubit.dart';
 import 'package:journal/src/features/books/presentation/bloc/create_book_cubit.dart';
 import 'package:journal/src/features/books/presentation/bloc/create_book_states.dart';
 import 'package:journal/src/functions.dart';
 import 'package:journal/src/locator.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateBookForm extends StatefulWidget {
   const CreateBookForm({super.key});
@@ -15,6 +17,9 @@ class CreateBookForm extends StatefulWidget {
 
 class _CreateBookFormState extends State<CreateBookForm> {
   final _formKey = GlobalKey<FormState>();
+
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -42,9 +47,39 @@ class _CreateBookFormState extends State<CreateBookForm> {
                   return Column(
                     children: [
                       Container(
-                        child: Placeholder(),
+                        constraints: const BoxConstraints(maxWidth: 300),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Theme.of(context).highlightColor,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: _image != null
+                              ? Image.network(
+                                  _image!.path,
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
+                        ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 5),
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          final XFile? pickedFile = await _picker.pickImage(
+                            source: ImageSource.gallery,
+                          );
+                          if (pickedFile != null) {
+                            setState(() {
+                              _image = pickedFile;
+                            });
+                          }
+                        },
+                        label: const Text('Select image'),
+                        icon: const Icon(Icons.image),
+                      ),
+                      const SizedBox(height: 30),
                       TextFormField(
                         controller: _nameController,
                         enabled: !_isLoading,
